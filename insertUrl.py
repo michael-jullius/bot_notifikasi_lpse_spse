@@ -5,9 +5,9 @@ url = ''
 
 
 db_url = mysql.connector.connect(
-        host='103.160.62.181',
-        user='roiputra',
-        password='Oj0dum3h**',
+        host='localhost',
+        user='root',
+        password='',
         database='bot'
 )
 cursor_url = db_url.cursor()

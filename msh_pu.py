@@ -4,22 +4,24 @@ import time
 
 
 db = mysql.connector.connect(
-        host='103.160.62.181',
-        user='roiputra',
-        password='Oj0dum3h**',
-        database='bot'
+    host='localhost',
+    user='root',
+    password='',
+    database='bot'
 )
 cursor = db.cursor()
 
-def send(id,bot_message):
-    
-   bot_token = '5459155550:AAFuQlEnbkY8C9_sGGtEabakDEqg_EtKaeM'
-   bot_chatID = id
-   send_text = 'https://api.telegram.org/bot' + bot_token + '/sendMessage?chat_id=' + bot_chatID + '&parse_mode=Markdown&text=' + bot_message
 
-   response = requests.get(send_text)
+def send(id, bot_message):
 
-   return response.json() 
+    bot_token = ''
+    bot_chatID = id
+    send_text = 'https://api.telegram.org/bot' + bot_token + \
+        '/sendMessage?chat_id=' + bot_chatID + '&parse_mode=Markdown&text=' + bot_message
+
+    response = requests.get(send_text)
+
+    return response.json()
 
 
 def user_log(id, id_user, nama, massage):
@@ -45,10 +47,9 @@ def user_log(id, id_user, nama, massage):
             user_log.chat_status = False
 
 
-
-
 def get_massage():
-    reg = requests.get('https://api.telegram.org/bot5459155550:AAFuQlEnbkY8C9_sGGtEabakDEqg_EtKaeM/getUpdates')
+    reg = requests.get(
+        'https://api.telegram.org/bot5459155550:AAFuQlEnbkY8C9_sGGtEabakDEqg_EtKaeM/getUpdates')
     raw_data = reg.json()
     if raw_data['result'] == []:
         get_massage.chat_status = True
@@ -59,14 +60,14 @@ def get_massage():
         get_massage.id_massage = data['message_id']
         get_massage.id = data['from']['id']
         if 'last_name' in data:
-            get_massage.name =  data['from']['first_name']+ ' '+data['from']['last_name']
+            get_massage.name = data['from']['first_name'] + \
+                ' '+data['from']['last_name']
         else:
             get_massage.name = data['from']['first_name']
         get_massage.chat = data['text']
-        user_log(get_massage.id_massage, get_massage.id, get_massage.name, get_massage.chat)
+        user_log(get_massage.id_massage, get_massage.id,
+                 get_massage.name, get_massage.chat)
         get_massage.chat_status = user_log.chat_status
-        
-
 
 
 def register(id_user, nama):
@@ -88,10 +89,10 @@ def register(id_user, nama):
             sql = "INSERT INTO `user_pu` (`nama`, `id_user`) VALUES (%s,%s);"
             val = nama, id_user
             cursor.execute(sql, val)
-            db.commit() 
+            db.commit()
             send(id_user, 'selamat {} berhasil mendaftar'.format(nama))
-            
-            
+
+
 def list_url(id):
     sql = "SELECT `url` FROM `url`"
     cursor.execute(sql)
@@ -100,7 +101,7 @@ def list_url(id):
     for u in url:
         s += '{} \n \n'.format(u[0])
     send(id, s)
-    
+
 
 def sta(id):
     sql = "SELECT `status` FROM `status`"
@@ -109,7 +110,8 @@ def sta(id):
     for st in status:
         text = st[0]
     send(id, text)
-    
+
+
 def userList(id):
     sql = "SELECT nama FROM `user`"
     cursor.execute(sql)
@@ -119,18 +121,17 @@ def userList(id):
         s += '{} \n'.format(u[0])
     send(id, s)
 
-    
-           
+
 while True:
     try:
         time.sleep(1)
         get_massage()
         status = False
-        
+
         if get_massage.chat_status == True:
             continue
         else:
-            if get_massage.chat == '/start' or  get_massage.chat == '/menu':
+            if get_massage.chat == '/start' or get_massage.chat == '/menu':
                 if get_massage.id == 1270328028 or get_massage.id == 1952593695:
                     menu = """
                     halo selamat datang {}
@@ -155,26 +156,26 @@ karena bot akan tertidur,
 jika tidak di gunakan dalam waktu yang lama.
                             """.format(get_massage.name)
                     send('{}'.format(get_massage.id), menu)
-                    
+
             elif get_massage.chat == '/register':
-                
-                register("{}".format(get_massage.id) , get_massage.name)
-            
+
+                register("{}".format(get_massage.id), get_massage.name)
+
             elif get_massage.chat == '/urlList':
-                
+
                 list_url('{}'.format(get_massage.id),)
-            
+
             elif get_massage.chat == '/status':
-                
+
                 sta('{}'.format(get_massage.id))
-            
+
             elif get_massage.chat == '/userList':
-                
+
                 userList('{}'.format(get_massage.id))
-                
+
             else:
                 send('{}'.format(get_massage.id), 'input tidak di ketahui')
-    
+
     except:
         time.sleep(3)
-        continue     
+        continue
