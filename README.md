@@ -2,10 +2,10 @@
 bot pengecekan pekerjaan kontruksi di website lpse dan spse dan memberikan notifikasi pekerjaan kontruksi di telegram  
 
 # setup 
-install python3 
-install pip3
-install library
-pip3 install -r lib.text
+install python3 \n 
+install pip3 \n
+install library \n
+pip3 install -r lib.text \n
 
 # installasi database 
 python3 migrate.py
