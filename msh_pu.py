@@ -49,7 +49,7 @@ def user_log(id, id_user, nama, massage):
 
 def get_massage():
     reg = requests.get(
-        'https://api.telegram.org/bot5459155550:AAFuQlEnbkY8C9_sGGtEabakDEqg_EtKaeM/getUpdates')
+        'https://api.telegram.org/tokenAnda/getUpdates')
     raw_data = reg.json()
     if raw_data['result'] == []:
         get_massage.chat_status = True
